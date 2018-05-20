@@ -6,7 +6,9 @@ import numpy as np
 b=0
 a=0.5
 x = np.array([[b,1,1],[b,1,0],[b,0,0],[b,0,1]])
+
 d =np.array([1,1,0,1])
+
 w=np.array([b,0,0])
 def sgn(v):
         if v>0:
