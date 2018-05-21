@@ -4,6 +4,9 @@ Created on Oct 14, 2010
 @author: Peter Harrington
 '''
 import matplotlib.pyplot as plt
+from tensorflow import tensor_shape
+print tensor_shape
+
 
 decisionNode = dict(boxstyle="sawtooth", fc="0.8")
 leafNode = dict(boxstyle="round4", fc="0.8")
@@ -86,3 +89,5 @@ def retrieveTree(i):
     return listOfTrees[i]
 
 #createPlot(thisTree)
+
+# print tensorflow.__version__
