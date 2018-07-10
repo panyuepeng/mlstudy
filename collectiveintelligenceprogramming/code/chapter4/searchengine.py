@@ -1,7 +1,7 @@
 import urllib2
-from BeautifulSoup import *
+from bs4.BeautifulSoup import *
 from urlparse import urljoin
-from pysqlite2 import dbapi2 as sqlite
+from sqlite3 import dbapi2 as sqlite
 import nn
 mynet=nn.searchnet('nn.db')
 
