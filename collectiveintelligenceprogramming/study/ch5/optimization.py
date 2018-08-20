@@ -38,7 +38,7 @@ def getminutes(t):
     :return:
     """
     x = time.strptime(t, '%H:%M')
-    print x
+    # print x
     #
     return x[3]*60+x[4]
 

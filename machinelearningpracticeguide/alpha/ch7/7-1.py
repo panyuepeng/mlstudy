@@ -48,7 +48,8 @@ for xn in x:
 for xn in x:
     print "%d and %d => %d " %(xn[1], xn[2], comy(w,xn))
 
-
+import jinja2
+print jinja2.__version__
 
 
 
