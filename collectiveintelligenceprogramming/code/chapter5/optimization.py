@@ -199,3 +199,6 @@ def geneticoptimize(domain,costf,popsize=50,step=1,
     print scores[0][0]
     
   return scores[0][1]
+
+s = [1,4,3,2,7,3,6,3,2,4,5,3]
+print schedulecost(s)

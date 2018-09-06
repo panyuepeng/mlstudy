@@ -38,7 +38,7 @@ def getminutes(t):
     :return:
     """
     x = time.strptime(t, '%H:%M')
-    # print x
+    print x
     #
     return x[3]*60+x[4]
 
@@ -59,8 +59,26 @@ def printschedule(r):
                                                       ret[0], ret[1], ret[2])
 
 
+def schedulecost(sol):
+    totalprice = 0
+    latestarrival = 0
+    earlieastdep = 24 * 60
+    for d in range(len(sol)/2):
+        #得到往返程的航班
+        origin = people[d][1]
+        outbound = flights[(origin, destination)][int(sol[2 * d])]
+        returnf  = flights[(destination, origin)][int(sol[2*d + 1])]
+
+        # 总价格等于所有往返成的价格只和
+        totalprice += outbound[2]
+        totalprice += returnf[2]
+
+        # 记录最晚到达时间和最早离开时间
+
+
 if __name__ == '__main__':
 
-    getminutes("13:24")
+    s = [1,4,3,2,7,3,6,3,2,4,5,3]
+    printschedule(s)
 
     pass
