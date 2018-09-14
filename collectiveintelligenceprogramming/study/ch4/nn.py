@@ -173,3 +173,22 @@ class searchnet:
             for k in range(len(self.urlids)):
                 self.setstrength(self.hiddenids[j], self.urlids[k], 1, self.wo[j][k])
         self.con.commit()
+
+
+if __name__ == '__main__':
+    mynet = searchnet('nn.db')
+    mynet.trainquery(['wWorld','wBank'],
+                     ['uWorldBank','uRiver','uEarth'],
+                     'uWorldBank')
+    print mynet.getresult(['wWorld','wBank'],
+                     ['uWorldBank','uRiver','uEarth'])
+
+    #==============
+    allurls=['uWorldBank', 'uRiver', 'uEarth']
+    for i in range(30):
+        mynet.trainquery(['wWorld', 'wBank'], allurls, 'uWorldBank')
+        mynet.trainquery(['wRiver', 'wBank'], allurls, 'uRiver')
+        mynet.trainquery(['wWorld'], allurls, 'uEarth')
+    print mynet.getresult(['wWorld', 'wBank'], allurls)
+    print mynet.getresult(['wRiver', 'wBank'], allurls)
+    print mynet.getresult(['wRiver', 'wBank'], allurls)
