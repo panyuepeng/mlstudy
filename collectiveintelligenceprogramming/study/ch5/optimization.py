@@ -62,6 +62,7 @@ def schedulecost(sol):
     totalprice = 0
     latestarrival = 0
     earlieastdep = 24 * 60
+
     for d in range(len(sol) / 2):
         # 得到往返程的航班
         origin = people[d][1]  # people的所在地
@@ -153,7 +154,7 @@ def hillclimb(domain, costf):
     return sol
 
 
-def random_climb(domain, costf,optm=hillclimb, count=10):
+def random_climb(domain, costf, optm=hillclimb, count=10):
     """
     设置多个随机初始解,随机重复爬山法
     :param domain:
@@ -194,7 +195,7 @@ def annealingoptimize(domain, costf, T=100000.0, cool=0.99, step=1):
         vecb[i] += dir
         # print 'vecb: after +d ', vecb
 
-        #防止负数对于维度数据的向下溢出
+        # 防止负数对于维度数据的向下溢出
         if vecb[i] < domain[i][0]:
             vecb[i] = domain[i][0]
             # print  '1 if           ', vecb
@@ -217,14 +218,38 @@ def annealingoptimize(domain, costf, T=100000.0, cool=0.99, step=1):
 def pytest(target=2306):
     a = None
     while True:
-        a= random_climb(domain,schedulecost,optm=hillclimb, count=500)
-        b= random_climb(domain,schedulecost, optm=annealingoptimize)
-        if a==b and a[1] == target:
+        a = random_climb(domain, schedulecost, optm=hillclimb, count=500)
+        b = random_climb(domain, schedulecost, optm=annealingoptimize)
+        if a == b and a[1] == target:
             break
     return a
 
 
-def geneticoptimeze(domain, costf, popsize=50, step=1,mutprob=0.2, elite = 0.2, maxiter = 100):
+# 变异操作
+def mutate(vec, ratio=0.5, step=1):
+    # print len(vec)
+    if ratio <= 0 or ratio>1:
+        raise Exception('ratio is unvalid.')
+    # 获取到变异位置
+    i = random.randint(0, len(domain) - 1)
+
+    if random.random() < ratio and vec[i] > domain[i][0]:
+        return vec[0:i] + [vec[i] - step] + vec[i + 1:]
+
+    elif random.random() < ratio and vec[i] < domain[i][1]:
+        return vec[0:i] + [vec[i] + step] + vec[i +1:]
+
+    else:
+        tval = random.randint(domain[i][0],domain[i][1])
+        return vec[0:i] + [tval] + vec[i + 1:]
+
+
+# 交叉操作
+def crossover(r1, r2):
+    i = random.randint(1, len(domain) - 2)
+    return r1[0:i] + r2[i:]
+
+def geneticoptimeze(domain, costf, popsize=500, step=1, mutprob=0.2, elite=0.2, maxiter=100):
     """
 
     :param domain:
@@ -236,8 +261,49 @@ def geneticoptimeze(domain, costf, popsize=50, step=1,mutprob=0.2, elite = 0.2, 
     :param maxiter: 运行的代数，可选
     :return:
     """
-    # 变异操作
-    pass
+
+    # 构建初始群
+    pop = []
+    for i in range(popsize):
+        vec = list()
+        for j in range(len(domain)):
+            vec.append(random.randint(domain[j][0], domain[j][1]))
+        pop.append(vec)
+
+    # 每一代中有多少个体胜出者
+    topelite = int(elite * popsize)
+
+    # 主循环
+    for i in range(maxiter):
+        scores = list()
+        for v in pop:
+            scores.append((costf(v), v))
+        scores.sort()
+        ranked = list()
+        for s in scores:
+            ranked.append(s[1])
+        # 从纯粹的胜出者开始
+        pop = ranked[0: topelite]
+        # 添加配对和变异后的胜出者
+        while len(pop) < popsize:
+            if random.random() < mutprob:
+                # 变异
+                c = random.randint(0, topelite)
+                tmp1 = mutate(ranked[c])
+                pop.append(tmp1)
+            else:
+                # 交叉
+                c1 = random.randint(0, topelite)
+                c2 = random.randint(0, topelite)
+                tmp = crossover(ranked[c1], ranked[c2])
+
+                pop.append(tmp)
+
+                # Print current best score
+        print scores[0][0]
+
+    return scores[0][1]
+
 
 if __name__ == '__main__':
     # [(0, 9), (0, 9), (0, 9), (0, 9), (0, 9), (0, 9), (0, 9) , (0, 9), (0, 9), (0, 9), (0, 9), (0, 9)]
@@ -255,4 +321,7 @@ if __name__ == '__main__':
     # print random_climb(domain,schedulecost,optm=hillclimb, count=100)
     # # print annealingoptimize(domain,schedulecost)
     # print random_climb(domain,schedulecost, optm=annealingoptimize)
-    pytest()
+    # pytest()
+    result = geneticoptimeze(domain, schedulecost)
+    print schedulecost(result)
+
