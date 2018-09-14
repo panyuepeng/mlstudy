@@ -177,18 +177,19 @@ class searchnet:
 
 if __name__ == '__main__':
     mynet = searchnet('nn.db')
-    mynet.trainquery(['wWorld','wBank'],
-                     ['uWorldBank','uRiver','uEarth'],
-                     'uWorldBank')
-    print mynet.getresult(['wWorld','wBank'],
-                     ['uWorldBank','uRiver','uEarth'])
+    # mynet.maketables()
+    mynet.trainquery([u'World', u'Bank'],
+                     [u'WorldBank',u'River',u'Earth'],
+                     u'WorldBank')
+    print mynet.getresult([u'World',u'Bank'],
+                     [u'WorldBank',u'River',u'Earth'])
 
     #==============
-    allurls=['uWorldBank', 'uRiver', 'uEarth']
+    allurls=[u'WorldBank', u'River', u'Earth']
     for i in range(30):
-        mynet.trainquery(['wWorld', 'wBank'], allurls, 'uWorldBank')
-        mynet.trainquery(['wRiver', 'wBank'], allurls, 'uRiver')
-        mynet.trainquery(['wWorld'], allurls, 'uEarth')
-    print mynet.getresult(['wWorld', 'wBank'], allurls)
-    print mynet.getresult(['wRiver', 'wBank'], allurls)
-    print mynet.getresult(['wRiver', 'wBank'], allurls)
+        mynet.trainquery([u'World', u'Bank'], allurls, u'WorldBank')
+        mynet.trainquery([u'River', u'Bank'], allurls, u'River')
+        mynet.trainquery([u'World'], allurls, u'Earth')
+    print mynet.getresult([u'World', u'Bank'], allurls)
+    print mynet.getresult([u'River', u'Bank'], allurls)
+    print mynet.getresult([u'River', u'Bank'], allurls)
