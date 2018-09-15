@@ -178,18 +178,26 @@ class searchnet:
 if __name__ == '__main__':
     mynet = searchnet('nn.db')
     # mynet.maketables()
-    mynet.trainquery([u'World', u'Bank'],
-                     [u'WorldBank',u'River',u'Earth'],
-                     u'WorldBank')
-    print mynet.getresult([u'World',u'Bank'],
-                     [u'WorldBank',u'River',u'Earth'])
+    wWorld, wRiver, wBank = 101, 102, 103
+    uWorldBank, uRiver, uEarth = 201, 202, 203
+    mynet.generatehiddennode([wWorld,wBank],[uWorldBank, uRiver, uEarth])
+    for c in mynet.con.execute('select * from wordhidden'):
+        print c
+    for c2 in mynet.con.execute('select * from hiddenurl'):
+        print c2
 
-    #==============
-    allurls=[u'WorldBank', u'River', u'Earth']
+    #================
+    mynet = searchnet('nn.db')
+    mynet.trainquery([wWorld, wBank], [uWorldBank,uRiver, uEarth], uWorldBank)
+    print mynet.getresult([wWorld, wBank], [uWorldBank, uRiver, uEarth])
+
+
+    #=============================
+    allurls = [uWorldBank, uRiver, uEarth]
     for i in range(30):
-        mynet.trainquery([u'World', u'Bank'], allurls, u'WorldBank')
-        mynet.trainquery([u'River', u'Bank'], allurls, u'River')
-        mynet.trainquery([u'World'], allurls, u'Earth')
-    print mynet.getresult([u'World', u'Bank'], allurls)
-    print mynet.getresult([u'River', u'Bank'], allurls)
-    print mynet.getresult([u'River', u'Bank'], allurls)
+        mynet.trainquery([wWorld, wBank], allurls, uWorldBank)
+        mynet.trainquery([wRiver, wBank], allurls, uRiver)
+        mynet.trainquery([wWorld], allurls, uEarth)
+    print mynet.getresult([wWorld, wBank], allurls)
+    print mynet.getresult([wRiver, wBank], allurls)
+    print mynet.getresult([wBank], allurls)
